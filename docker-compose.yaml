@@ -13,11 +13,20 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - todo-network
+
   app:
-    build: .
+    image: fayaz321/todo:1.0
     container_name: todo
     depends_on:
       - mongodb
+      - redis
     ports:
       - "${PORT}:3000"
     networks:
@@ -26,6 +35,7 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       MONGO_URI: ${MONGO_URI}
+      REDIS_URL: redis://redis:6379
 
 volumes:
   mongodb_data: {}
