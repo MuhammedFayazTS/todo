@@ -1,16 +1,30 @@
-class TodoRepository {
-  constructor() {
-    this.todos = [];
-  }
+import Todo from "../models/todo.model.js";
 
+class TodoRepository {
   async getAll() {
-    return this.todos;
+    return await Todo.find();
   }
 
   async create({ title, description }) {
-    const todo = { title, description };
-    this.todos.push(todo);
-    return todo;
+    return await Todo.create({
+      title,
+      description,
+    });
+  }
+
+  async getById(id) {
+    return await Todo.findById(id);
+  }
+
+  async update(id, data) {
+    return await Todo.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true,
+    });
+  }
+
+  async delete(id) {
+    return await Todo.findByIdAndDelete(id);
   }
 }
 

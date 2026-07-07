@@ -4,6 +4,7 @@ class TodoController {
   }
 
   async create(req, res) {
+    console.log("Request body:", req.body); // Log the request body for debugging
     const { title, description } = req.body;
     if (!title || !description) {
       return res
@@ -11,7 +12,7 @@ class TodoController {
         .json({ message: "Title and description are required" });
     }
 
-    const todo = await this.service.create(title, description);
+    const todo = await this.service.create({title, description});
     return res.status(201).json(todo);
   }
 
