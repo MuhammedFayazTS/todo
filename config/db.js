@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     await mongoose.connect(
-      "mongodb://admin:123456@localhost:27017/tododb?authSource=admin",
+      process.env.MONGO_URI,
     );
 
     console.log("MongoDB Connected");
