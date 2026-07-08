@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/todos", todosRoutes);
-app.use("/", (req, res) => res.json({ message: "Welcome to the Todo API" }));
+app.use("/", (req, res) => res.status(200).json({ message: "Welcome to the Todo API" }));
 
 
 export default app;
