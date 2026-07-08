@@ -10,6 +10,10 @@ class TodoService {
   async create({ title, description }) {
     return this.repository.create({ title, description });
   }
+
+  async getById(id) {
+    return this.repository.getById(id);
+  }
 }
 
 export default TodoService;

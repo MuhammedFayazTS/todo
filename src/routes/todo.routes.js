@@ -13,6 +13,7 @@ const todosService = new TodoService(todosRepository);
 const todosController = new TodoController(todosService, cache);
 
 router.get("/", todosController.getAll.bind(todosController));
+router.get("/:id", todosController.getById.bind(todosController));
 router.post("/", todosController.create.bind(todosController));
 
 export default router;

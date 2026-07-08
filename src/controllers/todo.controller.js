@@ -26,17 +26,29 @@ class TodoController {
     const cached = await this.cache.get(cacheKey);
 
     if (cached) {
-      console.log("Cache Hit");
       return res.status(200).json(JSON.parse(cached));
     }
-
-    console.log("Cache Miss");
 
     const todos = await this.service.getAll();
 
     await this.cache.set(cacheKey, JSON.stringify(todos));
 
     return res.status(200).json(todos);
+  }
+
+  async getById(req, res) {
+    const { id } = req.params;
+    const cacheKey = `${CACHE_KEYS.TODOS}_${id}`;
+    const cached = await this.cache.get(cacheKey);
+
+    if (cached) {
+      return res.status(200).json(JSON.parse(cached));
+    }
+
+    const todo = await this.service.getById(id);
+
+    await this.cache.set(cacheKey, JSON.stringify(todo));
+    return res.status(200).json(todo);
   }
 }
 
