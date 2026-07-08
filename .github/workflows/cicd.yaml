@@ -71,12 +71,53 @@ jobs:
         with:
           context: .
           push: true
-          
+
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/todo:latest
             ${{ secrets.DOCKER_USERNAME }}/todo:${{ github.sha }}
+    
+      - name: Deploy to AWS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ${{ secrets.AWS_USER }}
+          key: ${{ secrets.AWS_SSH_KEY  }}
+          script: |
+            cd ~/todo
+            git pull
+            docker compose down
+            docker compose pull
+            docker compose up -d
 
+      - name: Smoke Test
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ${{ secrets.AWS_USER }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          script: |
+            echo "Waiting for application to become ready..."
       
+            for i in {1..30}; do
+              if curl -fs http://localhost:3000/ > /dev/null; then
+                echo "Application is running."
+      
+                sudo systemctl restart nginx
+                exit 0
+              fi
+      
+              echo "Attempt $i/30: Application not ready yet..."
+              sleep 2
+            done
+      
+            echo "Smoke test failed."
+      
+            docker compose ps
+            echo ""
+            docker compose logs --tail=100
+      
+            exit 1
+          
