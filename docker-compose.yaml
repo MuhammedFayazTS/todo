@@ -22,7 +22,7 @@ services:
       - todo-network
 
   app:
-    image: fayaz321/todo:1.0
+    image: fayaz321/todo:latest
     container_name: todo
     depends_on:
       - mongodb
