@@ -1,4 +1,5 @@
 import { CACHE_KEYS } from "../constants/cache_keys.js";
+import { validateCreateTodo } from "../utils/validators/todo.validator.js";
 
 class TodoController {
   constructor(service, cache) {
@@ -7,15 +8,12 @@ class TodoController {
   }
 
   async create(req, res) {
-    console.log("Request body:", req.body); // Log the request body for debugging
-    const { title, description } = req.body;
-    if (!title || !description) {
-      return res
-        .status(400)
-        .json({ message: "Title and description are required" });
+    const { isValid, message, data } = validateCreateTodo(req.body);
+    if (!isValid) {
+      return res.status(400).json({ message });
     }
 
-    const todo = await this.service.create({ title, description });
+    const todo = await this.service.create(data);
 
     await this.cache.del(CACHE_KEYS.TODOS);
 
