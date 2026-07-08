@@ -1,5 +1,5 @@
 import { it, describe, expect } from "vitest";
-import { validateCreateTodo } from "../../utils/validators/todo.validator";
+import { validateCreateTodo } from "../../src/utils/validators/todo.validator";
 
 describe("Todo Validators", () => {
   it("Should validate create todo input correctly", () => {

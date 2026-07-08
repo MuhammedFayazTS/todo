@@ -1,6 +1,6 @@
 import express from "express";
 
-import todosRoutes from "./routes/todo.routes.js";
+import todosRoutes from "./src/routes/todo.routes.js";
 
 const app = express();
 
